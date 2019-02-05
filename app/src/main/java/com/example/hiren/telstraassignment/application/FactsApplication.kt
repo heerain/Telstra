@@ -2,7 +2,7 @@ package com.example.hiren.telstraassignment.application
 
 import android.app.Application
 import com.example.hiren.telstraassignment.di.*
-import com.example.hiren.telstraassignment.model.Constants
+import com.example.hiren.telstraassignment.model.ModelConstants
 
 class FactsApplication : Application() {
 
@@ -10,7 +10,7 @@ class FactsApplication : Application() {
 
     private val networkComponent: NetworkComponent
         get() = DaggerNetworkComponent.builder()
-            .networkModule(NetworkModule(Constants.BASE_URL))
+            .networkModule(NetworkModule(ModelConstants.BASE_URL))
             .build()
 
     override fun onCreate() {

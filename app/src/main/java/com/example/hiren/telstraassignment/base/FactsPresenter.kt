@@ -28,5 +28,4 @@ class FactsPresenter : PresenterImpl, Observer<FactsResponseMain> {
         unSubscribeAll()
         subscribe(mFactsViewInterface.getFacts(),this)
     }
-
 }

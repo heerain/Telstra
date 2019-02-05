@@ -18,37 +18,40 @@ public class FactsAdaper extends RecyclerView.Adapter<FactsAdaper.Holder> {
     private final LayoutInflater mInflater;
     private ArrayList<FactsResponse> mFactsResponseList;
 
-    public FactsAdaper(LayoutInflater layoutInflator){
-        mInflater = layoutInflator;
+    public FactsAdaper(LayoutInflater layoutInflater) {
+        mInflater = layoutInflater;
         mFactsResponseList = new ArrayList<>();
     }
 
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new Holder(mInflater.inflate(R.layout.item_fact,viewGroup,false));
+        return new Holder(mInflater.inflate(R.layout.item_fact, viewGroup, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int i) {
         FactsResponse factsResponse = mFactsResponseList.get(i);
 
-        if(factsResponse.getTitle()!=null) {
+        if (factsResponse.getTitle() != null) {
             holder.mTitle.setText(factsResponse.getTitle());
-        }else{
-            holder.mTitle.setText("No Title");
+        } else {
+            holder.mTitle.setText(R.string.no_title);
         }
 
-        if(factsResponse.getDescription() != null)
+        if (factsResponse.getDescription() != null)
             holder.mDesc.setText(factsResponse.getDescription());
         else
-            holder.mDesc.setText("No Description");
+            holder.mDesc.setText(R.string.no_description);
 
-        if(factsResponse.getImageHref() == null){
-            holder.mPhoto.setImageResource(R.drawable.telstra_logo);
-        }else {
-            Picasso.get().load(factsResponse.getImageHref()).into(holder.mPhoto);
-        }
+        //used picasso library to download image lazy
+        Picasso.get().
+                load(factsResponse.getImageHref())
+                .fit()
+                .placeholder(R.drawable.telstra_logo)
+                .error(R.drawable.telstra_logo)
+                .into(holder.mPhoto);
+
     }
 
     @Override
@@ -62,9 +65,9 @@ public class FactsAdaper extends RecyclerView.Adapter<FactsAdaper.Holder> {
     }
 
 
-    public class Holder extends RecyclerView.ViewHolder{
+    public class Holder extends RecyclerView.ViewHolder {
 
-        private TextView mTitle,mDesc;
+        private TextView mTitle, mDesc;
         private ImageView mPhoto;
 
         public Holder(@NonNull View itemView) {
@@ -73,9 +76,5 @@ public class FactsAdaper extends RecyclerView.Adapter<FactsAdaper.Holder> {
             mDesc = itemView.findViewById(R.id.tv_desc);
             mPhoto = itemView.findViewById(R.id.img_photo);
         }
-
-
-
-
     }
 }

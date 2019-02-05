@@ -4,10 +4,10 @@ package com.example.hiren.telstraassignment.view
 import android.app.ProgressDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.widget.ListView
 import android.widget.Toast
 import com.example.hiren.telstraassignment.R
 import com.example.hiren.telstraassignment.base.FactsPresenter
@@ -22,12 +22,14 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), FactsViewInterface {
 
     @Inject
-    lateinit var mService : FactService
+    lateinit var mService: FactService
 
-    private lateinit var mPresenter : FactsPresenter
+    private lateinit var mPresenter: FactsPresenter
     private lateinit var mFactsRecyclerView: RecyclerView
     private lateinit var mFactsAdaper: FactsAdaper
-    private lateinit var mDialog : ProgressDialog
+    private lateinit var mDialog: ProgressDialog
+    private lateinit var title: String
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,26 +43,34 @@ class MainActivity : AppCompatActivity(), FactsViewInterface {
         initView()
         configView()
 
+    }
 
+    private fun setToolbarTitle() {
+        supportActionBar?.title = title
     }
 
     private fun initView() {
         mFactsRecyclerView = findViewById(R.id.recyclerview_facts)
-
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
     }
 
     private fun configView() {
         mFactsRecyclerView.layoutManager = LinearLayoutManager(this)
+        mFactsRecyclerView.setHasFixedSize(true)
+        mFactsRecyclerView.setItemViewCacheSize(20)
         mFactsAdaper = FactsAdaper(LayoutInflater.from(this))
         mFactsRecyclerView.adapter = mFactsAdaper
+        mSwipeRefreshLayout.setOnRefreshListener {
+            mPresenter.fetchFacts()
+            mDialog = ProgressDialog.show(this, getString(R.string.please_wait), getString(R.string.download_msg), true)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         mPresenter.onResume()
         mPresenter.fetchFacts()
-        mDialog = ProgressDialog.show(this,"Downloading List. .","Please wait . . .",true)
-
+        mDialog = ProgressDialog.show(this, getString(R.string.please_wait), getString(R.string.download_msg), true)
     }
 
     override fun onCompleted() {
@@ -69,15 +79,20 @@ class MainActivity : AppCompatActivity(), FactsViewInterface {
 
     override fun onError(message: String?) {
         mDialog.dismiss()
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onFacts(factsResponseMain: FactsResponseMain) {
+        title = factsResponseMain.title
         mFactsAdaper.addFactsList(factsResponseMain.rows)
+        setToolbarTitle()
+        if (mSwipeRefreshLayout.isRefreshing) {
+            mSwipeRefreshLayout.isRefreshing = false
+        }
+
     }
 
     override fun getFacts(): Observable<FactsResponseMain> {
         return mService.facts
     }
-
 }
