@@ -1,4 +1,4 @@
-package com.example.hiren.telstraassignment.base
+package com.example.hiren.telstraassignment.presenter
 
 interface Presenter {
     fun onCreate()

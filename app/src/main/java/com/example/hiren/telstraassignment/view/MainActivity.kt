@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.widget.Toast
 import com.example.hiren.telstraassignment.R
-import com.example.hiren.telstraassignment.base.FactsPresenter
+import com.example.hiren.telstraassignment.presenter.FactsPresenter
 import com.example.hiren.telstraassignment.di.apiComponent
 import com.example.hiren.telstraassignment.model.FactsAdaper
 import com.example.hiren.telstraassignment.model.FactsResponseMain

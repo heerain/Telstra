@@ -1,4 +1,4 @@
-package com.example.hiren.telstraassignment.base
+package com.example.hiren.telstraassignment.presenter
 
 import com.example.hiren.telstraassignment.model.FactsResponseMain
 import com.example.hiren.telstraassignment.service.FactsViewInterface
@@ -6,7 +6,7 @@ import rx.Observer
 
 class FactsPresenter : PresenterImpl, Observer<FactsResponseMain> {
 
-    private lateinit var mFactsViewInterface: FactsViewInterface
+    private var mFactsViewInterface: FactsViewInterface
 
     constructor(factsViewInterface: FactsViewInterface) : super(){
         mFactsViewInterface = factsViewInterface

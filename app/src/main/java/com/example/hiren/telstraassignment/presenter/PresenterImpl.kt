@@ -1,4 +1,4 @@
-package com.example.hiren.telstraassignment.base
+package com.example.hiren.telstraassignment.presenter
 
 
 import rx.Observable
@@ -48,6 +48,5 @@ abstract class PresenterImpl : Presenter{
             .unsubscribeOn(Schedulers.computation())
             .subscribe(observer)
         configureSubscription().add(subscriptions)
-
     }
 }
